@@ -33,9 +33,7 @@ export default function Variants({ onOptionsChange, onCombinationsChange }: Vari
   const presetColors = ["Red", "White", "Blue", "Black"];
   const optionChoices = ["Size UK", "Size US", "Color"];
 
-  /* -------------------------------------------------------------------
-      EFFECTS
-  ------------------------------------------------------------------- */
+ 
   useEffect(() => {
     if (variantOptions.length > 0) {
       generateCombinations();
@@ -50,9 +48,6 @@ export default function Variants({ onOptionsChange, onCombinationsChange }: Vari
     onCombinationsChange?.(variantCombinations);
   }, [variantCombinations]);
 
-  /* -------------------------------------------------------------------
-      HELPERS
-  ------------------------------------------------------------------- */
   const calculateSellingPrice = (mrp: number, offerPercent: number) => {
     return Math.round((mrp - (mrp * offerPercent) / 100) * 100) / 100;
   };
@@ -172,7 +167,7 @@ export default function Variants({ onOptionsChange, onCombinationsChange }: Vari
     selectedOptionName !== "" ||
     (variantOptions.length > 0 && variantCombinations.length > 0);
 
-  // Helper function to format variant name with line breaks
+
   const formatVariantName = (name: string) => {
     return name.split(" + ").map((part, index, array) => (
       <React.Fragment key={index}>

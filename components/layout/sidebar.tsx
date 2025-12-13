@@ -188,7 +188,7 @@ const Sidebar = () => {
 export default Sidebar;
 
 
-// -------- REUSABLE COMPONENT --------
+
 interface ItemProps {
   icon: string;
   label: string;
