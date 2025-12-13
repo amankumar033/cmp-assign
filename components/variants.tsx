@@ -88,9 +88,7 @@ export default function Variants({ onOptionsChange, onCombinationsChange }: Vari
     setVariantCombinations(combos);
   };
 
-  /* -------------------------------------------------------------------
-      OPTION MANAGEMENT
-  ------------------------------------------------------------------- */
+
 
   const toggleValue = (value: string) => {
     setSelectedValues(prev =>
