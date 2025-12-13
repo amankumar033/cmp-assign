@@ -159,7 +159,7 @@ const ProductOrganizationForm = forwardRef<ProductOrganizationFormRef>((props, r
               Tags
             </label>
             
-            <div className="flex gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
               <input
                 type="text"
                 value={newTag}
@@ -176,7 +176,7 @@ const ProductOrganizationForm = forwardRef<ProductOrganizationFormRef>((props, r
               <button
                 type="button"
                 onClick={handleAddTag}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                className="w-full md:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
               >
                 Add
               </button>
@@ -229,7 +229,7 @@ const ProductOrganizationForm = forwardRef<ProductOrganizationFormRef>((props, r
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Product weight
             </label>
-            <div className="flex gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
               <input
                 type="number"
                 step="0.001"
@@ -237,7 +237,7 @@ const ProductOrganizationForm = forwardRef<ProductOrganizationFormRef>((props, r
                 onChange={(e) => handleInputChange("productWeight", e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-              <div className="relative w-32">
+              <div className="relative w-full md:w-32">
                 <select
                   value={formData.weightUnit}
                   onChange={(e) => handleInputChange("weightUnit", e.target.value)}

@@ -338,7 +338,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
           {/* Upload Area */}
           <div
             onClick={handleImageAreaClick}
-            className={`mt-2 border ${imageFiles.length === 0 ? "border-red-500" : "border-gray-300"} rounded-lg cursor-pointer hover:border-gray-200 transition-colors`}
+            className={`mt-2 border ${imageFiles.length === 0 ? "border-gray-300" : "border-gray-300"} rounded-lg cursor-pointer hover:border-gray-200 transition-colors`}
           >
             {imageFiles.length === 0 ? (
               <div className="flex items-center justify-center flex-col p-8 bg-white text-center">
@@ -349,7 +349,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                 <p className="text-gray-400 text-xs">
                   upload images and video of any product.
                 </p>
-                <p className="text-red-500 text-xs mt-2">At least one image is required</p>
+                
               </div>
             ) : (
               <div className="p-4">
