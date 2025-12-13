@@ -15,6 +15,7 @@ export default function Home() {
   const formElementRef = useRef<HTMLFormElement>(null);
   const { toggle: toggleSidebar, isOpen: isSidebarOpen } = useSidebar();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showFigmaEmbed, setShowFigmaEmbed] = useState(true);
 
   const handleCancel = () => {
     formOneRef.current?.reset();
@@ -61,6 +62,20 @@ export default function Home() {
 
       console.log("All Form Data:", allFormData);
       
+      // Save to localStorage
+      try {
+        const existingProducts = JSON.parse(localStorage.getItem('products') || '[]');
+        const newProduct = {
+          id: Date.now().toString(),
+          ...allFormData,
+          createdAt: new Date().toISOString()
+        };
+        existingProducts.push(newProduct);
+        localStorage.setItem('products', JSON.stringify(existingProducts));
+      } catch (error) {
+        console.error('Failed to save to localStorage:', error);
+      }
+      
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -78,6 +93,51 @@ export default function Home() {
 
   return (
     <div>
+      {/* Figma Embed */}
+      {showFigmaEmbed && (
+        <div className="w-full bg-white border-b border-gray-200 p-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-sm font-semibold text-gray-700">Design Reference</h2>
+              <button
+                onClick={() => setShowFigmaEmbed(false)}
+                className="text-gray-500 hover:text-gray-700 text-sm px-2 py-1 rounded hover:bg-gray-100 transition-colors"
+                aria-label="Hide design reference"
+              >
+                Hide
+              </button>
+            </div>
+            <div className="w-full h-96 border border-gray-300 rounded-lg overflow-hidden">
+              <iframe
+                src="https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/design/zseMQCcDXvA55nVZOiQMWI/PSZ-Admin-Flow?node-id=0-1"
+                className="w-full h-full"
+                allowFullScreen
+                title="Figma Design Reference"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Show Figma Embed Button (when hidden) */}
+      {!showFigmaEmbed && (
+        <div className="w-full bg-white border-b border-gray-200 p-2">
+          <div className="max-w-7xl mx-auto">
+            <button
+              onClick={() => setShowFigmaEmbed(true)}
+              className="text-sm text-gray-600 hover:text-gray-800 px-3 py-1 rounded hover:bg-gray-100 transition-colors flex items-center gap-2"
+              aria-label="Show design reference"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Show Design Reference
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header Section */}
       <div className="flex justify-between bg-white items-center px-4 md:px-18 py-3 border-b border-gray-200">
         <div className="flex items-center gap-4">

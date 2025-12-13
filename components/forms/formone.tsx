@@ -5,6 +5,7 @@ import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "re
 import { useForm } from "react-hook-form";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import Variants, { VariantOption, VariantCombination } from "@/components/variants";
+import { toast } from "react-toastify";
 
 type FormValues = {
   title: string;
@@ -38,10 +39,25 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [variantOptions, setVariantOptions] = useState<VariantOption[]>([]);
   const [variantCombinations, setVariantCombinations] = useState<VariantCombination[]>([]);
+  
+  // Dependent subcategories based on category
+  const categorySubcategories: Record<string, string[]> = {
+    football: ["Football", "Football Boots", "Football Jerseys", "Football Accessories"],
+    cricket: ["Cricket Bats", "Cricket Balls", "Cricket Pads", "Cricket Gloves"],
+    badminton: ["Badminton Rackets", "Shuttlecocks", "Badminton Shoes", "Badminton Accessories"]
+  };
 
   const mrp = watch("mrp");
   const offer = watch("offer");
   const sellingPrice = watch("sellingPrice");
+  const selectedCategory = watch("category");
+
+  // Reset subcategory when category changes
+  useEffect(() => {
+    if (selectedCategory) {
+      setValue("subCategory", "");
+    }
+  }, [selectedCategory, setValue]);
 
   // Expose form methods via ref
   useImperativeHandle(ref, () => ({
@@ -63,19 +79,48 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
     }
   }, [mrp, offer, setValue]);
 
-  // Manual selling price → remove offer
-  const onManualPrice = () => {
-    setValue("offer", "0% Off");
+  // Manual selling price → adjust offer%
+  const onManualPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const manualPrice = parseFloat(e.target.value);
+    if (mrp && manualPrice && !isNaN(manualPrice)) {
+      const discountPercent = ((mrp - manualPrice) / mrp) * 100;
+      if (discountPercent >= 0 && discountPercent <= 100) {
+        const roundedDiscount = Math.round(discountPercent);
+        setValue("offer", `${roundedDiscount}% Off`);
+      } else {
+        setValue("offer", "0% Off");
+      }
+    }
   };
 
   // Image upload handler
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files) as File[];
-      if (files.length + imageFiles.length > 10) {
-        alert("Maximum 10 images allowed");
+      
+      // Validate file types (jpg, png, webp only)
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      const invalidFiles = files.filter(file => !allowedTypes.includes(file.type));
+      
+      if (invalidFiles.length > 0) {
+        toast.error(`Invalid file type. Only JPG, PNG, and WEBP images are allowed.`);
         return;
       }
+      
+      // Validate file size (max 5MB per file)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      const oversizedFiles = files.filter(file => file.size > maxSize);
+      
+      if (oversizedFiles.length > 0) {
+        toast.error(`File size exceeds 5MB limit. Please upload smaller images.`);
+        return;
+      }
+      
+      if (files.length + imageFiles.length > 10) {
+        toast.error("Maximum 10 images allowed");
+        return;
+      }
+      
       const newFiles = [...imageFiles, ...files];
       setImageFiles(newFiles);
       setValue("images", newFiles);
@@ -155,7 +200,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
     <form
       ref={formElementRef}
       onSubmit={handleSubmit(handleFormSubmit, handleFormError)}
-      className="w-full max-w-4xl mx-auto p-6 space-y-6"
+      className="w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6"
       id="form-one"
     >
       <div className="border border-gray-300 rounded-lg">
@@ -166,12 +211,20 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
           </label>
           <input
             type="text"
-            {...register("title", { required: "Title is required" })}
+            {...register("title", { 
+              required: "Title is required",
+              maxLength: { value: 150, message: "Title must be less than 150 characters" }
+            })}
             placeholder="Add product title"
+            maxLength={150}
             className={`w-full mt-1 ${getBorderClass(watch("title"))} rounded-lg px-3 py-2 focus:outline-none  border ${errors.title ? "border-red-500" : "border-gray-300"} focus:border-gray-400 ${getBgClass(watch("title"))} ${getTextClass(watch("title"))}`}
+            aria-label="Product title"
+            aria-required="true"
+            aria-invalid={errors.title ? "true" : "false"}
+            aria-describedby={errors.title ? "title-error" : undefined}
           />
           {errors.title && (
-            <p className="text-red-500 text-sm mt-1">{errors.title.message as string}</p>
+            <p id="title-error" className="text-red-500 text-sm mt-1" role="alert">{errors.title.message as string}</p>
           )}
         </div>
 
@@ -187,6 +240,9 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                 {...register("category", { required: "Category is required" })}
                 defaultValue=""
                 className={`w-full mt-1 ${getBorderClass(watch("category"))} border ${errors.category ? "border-red-500" : "border-gray-100"} rounded-lg appearance-none px-3 py-2 focus:outline-none focus:border-gray-300 cursor-pointer ${getBgClass(watch("category"))} ${getTextClass(watch("category"))}`}
+                aria-label="Category"
+                aria-required="true"
+                aria-invalid={errors.category ? "true" : "false"}
               >
                 <option value="" disabled className="bg-white text-gray-400">
                   Select category
@@ -218,19 +274,19 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                 {...register("subCategory", { required: "Sub-category is required" })}
                 defaultValue=""
                 className={`w-full mt-1 border ${errors.subCategory ? "border-red-500" : "border-gray-300"} ${getBorderClass(watch("subCategory"))} rounded-lg appearance-none px-3 py-2 focus:outline-none focus:border-gray-300 cursor-pointer ${getBgClass(watch("subCategory"))} ${getTextClass(watch("subCategory"))}`}
+                disabled={!selectedCategory}
+                aria-label="Sub-category"
+                aria-required="true"
+                aria-invalid={errors.subCategory ? "true" : "false"}
               >
                 <option value="" disabled className="bg-white text-gray-400">
-                  Select sub-category
+                  {selectedCategory ? "Select sub-category" : "Select category first"}
                 </option>
-                <option value="shoes" className="bg-white text-black hover:bg-gray-200">
-                  Shoes
-                </option>
-                <option value="football" className="bg-white text-black hover:bg-gray-200">
-                  Football
-                </option>
-                <option value="tshirt" className="bg-white text-black hover:bg-gray-200">
-                  T-Shirt
-                </option>
+                {selectedCategory && categorySubcategories[selectedCategory]?.map((subCat: string) => (
+                  <option key={subCat} value={subCat.toLowerCase().replace(/\s+/g, '-')} className="bg-white text-black hover:bg-gray-200">
+                    {subCat}
+                  </option>
+                ))}
               </select>
               <MdKeyboardArrowDown
                 size={20}
@@ -274,7 +330,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
             type="file"
             ref={fileInputRef}
             multiple
-            accept="image/*,video/*"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
             onChange={handleImageUpload}
             className="hidden"
           />
@@ -367,7 +423,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                             <input
                               type="file"
                               multiple
-                              accept="image/*,video/*"
+                              accept="image/jpeg,image/jpg,image/png,image/webp"
                               onChange={handleImageUpload}
                               className="hidden"
                             />
@@ -419,7 +475,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                           <input
                             type="file"
                             multiple
-                            accept="image/*,video/*"
+                            accept="image/jpeg,image/jpg,image/png,image/webp"
                             onChange={handleImageUpload}
                             className="hidden"
                           />
@@ -476,8 +532,11 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
           <input
             type="text"
             {...register("sellingPrice")}
-            onChange={onManualPrice}
+            onChange={(e) => {
+              onManualPrice(e);
+            }}
             placeholder="₹ 0"
+            aria-label="Selling price"
             className={`w-full mt-1 border border-gray-300 ${getBorderClass(sellingPrice)} rounded-lg px-3 py-2 focus:outline-none focus:border-gray-300 ${getBgClass(sellingPrice)} ${getTextClass(sellingPrice)}`}
           />
         </div>

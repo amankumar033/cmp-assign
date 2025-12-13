@@ -90,11 +90,11 @@ const ProductOrganizationForm = forwardRef<ProductOrganizationFormRef>((props, r
   const weightUnits = ["Kg", "Gram", "Pound", "Ounce"];
 
   return (
-    <div className="w-full max-w-4xl bg-white rounded-lg mx-auto">
+    <div className="w-full max-w-4xl bg-white rounded-lg mx-auto p-4 md:p-6">
 
      
         <div className=" pt-0 space-y-3">
-            <div className="border border-gray-300 px-4 mt-5 rounded-lg">
+            <div className="border border-gray-300 px-4 rounded-lg">
       {/* Header */}
       
       <div  >
