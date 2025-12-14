@@ -153,7 +153,7 @@ export default function Home() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleCancel}
-            className="text-xs md:text-sm bg-gray-100 px-2 py-1 md:px-4 md:py-2 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
+            className="text-sm  md:text-sm bg-gray-100 px-3 py-1  border border-gray-200 rounded-2xl hover:bg-gray-200 transition-colors"
           >
             Cancel
           </button>
@@ -165,7 +165,7 @@ export default function Home() {
               }
             }}
             disabled={isSubmitting}
-            className="text-xs md:text-sm text-white px-2 py-1 md:px-4 md:py-2 border border-gray-200 rounded-lg bg-gradient-to-r from-[#B70921] to-[#032C77] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 md:gap-2"
+            className="text-sm md:text-sm text-white px-3 py-1    border border-gray-200 rounded-2xl bg-gradient-to-r from-[#B70921] to-[#032C77] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 md:gap-2"
           >
             {isSubmitting && (
               <svg className="animate-spin h-3 w-3 md:h-4 md:w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -173,7 +173,7 @@ export default function Home() {
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             )}
-            {isSubmitting ? "Submitting..." : "Done"}
+            {isSubmitting ? "Submitting..." : "Save"}
           </button>
         </div>
       </div>
