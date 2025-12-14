@@ -321,8 +321,9 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
           </label>
 
           {/* Counter */}
-          <div className="absolute top-3 right-4 bg-gray-300 text-black text-sm px-2 py-1 rounded-full">
-            {imageFiles.length}/10
+          <div className="absolute top-3 right-4  text-black text-sm px-2 py-1 rounded-full">
+            {imageFiles.length>0?`${imageFiles.length}/10`:''}
+           
           </div>
 
           {/* Hidden file input */}
@@ -338,7 +339,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
           {/* Upload Area */}
           <div
             onClick={handleImageAreaClick}
-            className={`mt-2 border ${imageFiles.length === 0 ? "border-gray-300" : "border-gray-300"} rounded-lg cursor-pointer hover:border-gray-200 transition-colors`}
+            className={`mt-2 border ${imageFiles.length === 0 ? "border-gray-300" : "border-none"} rounded-lg cursor-pointer hover:border-gray-200 transition-colors`}
           >
             {imageFiles.length === 0 ? (
               <div className="flex items-center justify-center flex-col p-8 bg-white text-center">
@@ -356,7 +357,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                 <div className="grid grid-cols-6 grid-rows-2 gap-2 h-[270px]">
                   {/* First Image */}
                   <div className="col-span-2 row-span-2 relative">
-                    <div className="w-full h-full overflow-hidden rounded-lg border border-gray-100">
+                    <div className="w-full h-full overflow-hidden rounded-lg border border-gray-300">
                       <img
                         src={URL.createObjectURL(imageFiles[0])}
                         className="w-full h-full object-cover"
@@ -384,7 +385,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                     if (imgIndex < imageFiles.length) {
                       return (
                         <div key={imgIndex} className="relative">
-                          <div className="w-full h-full overflow-hidden rounded-lg border border-gray-100">
+                          <div className="w-full h-full overflow-hidden rounded-lg border border-gray-300">
                             <img
                               src={URL.createObjectURL(imageFiles[imgIndex])}
                               className="w-full h-full object-cover"
@@ -414,7 +415,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                           onClick={(e) => e.stopPropagation()}
                         >
                           <label className="cursor-pointer block w-full h-full">
-                            <div className="w-full h-full border-2 border-dashed border-gray-100 rounded-lg flex flex-col items-center justify-center bg-white hover:bg-gray-50">
+                            <div className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center bg-white hover:bg-gray-50">
                               <div className="text-2xl text-gray-400">+</div>
                               <div className="text-xs text-gray-500 mt-1">
                                 Add more
@@ -444,7 +445,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                         const imgIndex = idx + 5;
                         return (
                           <div key={imgIndex} className="relative w-20 h-20">
-                            <div className="w-full h-full overflow-hidden rounded-lg border border-gray-100">
+                            <div className="w-full h-full overflow-hidden rounded-lg border border-gray-300">
                               <img
                                 src={URL.createObjectURL(img)}
                                 className="w-full h-full object-cover"
@@ -466,7 +467,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
                       })}
                       {imageFiles.length < 10 && (
                         <label className="cursor-pointer">
-                          <div className="w-20 h-20 border-2 border-dashed border-gray-100 rounded-lg flex flex-col items-center justify-center bg-white hover:bg-gray-50">
+                          <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center bg-white hover:bg-gray-50">
                             <div className="text-xl text-gray-400">+</div>
                             <div className="text-[10px] text-gray-500 mt-1">
                               Add
