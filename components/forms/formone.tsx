@@ -239,7 +239,7 @@ const FormOne = forwardRef<FormOneRef, FormOneProps>(({ onSubmit, formElementRef
               <select
                 {...register("category", { required: "Category is required" })}
                 defaultValue=""
-                className={`w-full mt-1 ${getBorderClass(watch("category"))} border ${errors.category ? "border-red-500" : "border-gray-100"} rounded-lg appearance-none px-3 py-2 focus:outline-none focus:border-gray-300 cursor-pointer ${getBgClass(watch("category"))} ${getTextClass(watch("category"))}`}
+                className={`w-full mt-1 ${getBorderClass(watch("category"))} border ${errors.category ? "border-red-500" : "border-gray-300"} rounded-lg appearance-none px-3 py-2 focus:outline-none focus:border-gray-300 cursor-pointer ${getBgClass(watch("category"))} ${getTextClass(watch("category"))}`}
                 aria-label="Category"
                 aria-required="true"
                 aria-invalid={errors.category ? "true" : "false"}
